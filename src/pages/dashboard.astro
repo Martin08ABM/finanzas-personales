@@ -36,12 +36,21 @@ try {
 
 const email = session.data.user?.email;
 ---
+
 <Layout title="Dinario - Dashboard">
   <main class="px-4 py-2">
-    <h1 class="text-xl text-green-950 font-bold">Bienvenido <em class="font-extrabold">{email}</em></h1>
-    <p class="text-neutral-800 font-semibold">Estamos felices de verte aquí</p>
+    <h1 class="text-xl text-green-950 font-bold">
+      Bienvenido <em class="font-extrabold">{email}</em>
+    </h1>
+    <p class="text-neutral-800 font-semibold">Estamos felices de verte por aquí</p>
+    <h2 class="font-bold text-lg mt-2">¿Que quieres hacer?</h2>
+    <!-- TODO: Cuando la web este con las funciones mas avanzadas de añadir os datos actualizar esta parte para enviar a esas partes específicas -->
     <form action="/api/auth/signout">
-      <button type="submit">Cerrar sesión</button>
+      <button
+        type="submit"
+        class="border-none rounded-2xl bg-red-700 px-2 py-1 font-bold text-white"
+        >Cerrar sesión</button
+      >
     </form>
   </main>
 </Layout>
