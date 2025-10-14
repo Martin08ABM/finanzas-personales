@@ -2,7 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 ---
 
-<Layout>
+<Layout title="Dinario - Registro">
   <main class="px-4 py-2">
     <h1 class="text-black text-xl font-bold md:text-2xl lg:text-2xl">
       Registrate en Dinario:
@@ -25,14 +25,23 @@ import Layout from "../layouts/Layout.astro";
       />
       <!-- Contraseña -->
       <label for="password" class="mt-4 font-semibold">Contraseña:</label>
-      <input
-        type="password"
-        name="password"
-        id="password"
-        class="border-1 border-neutral-800 rounded-2xl outline-none px-2 py-1 text-sm sm:max-w-[80%] md:max-w-[60%] lg:max-w-[40%]"
-        autocomplete="current-password "
-        required
-      />
+      <div
+        class="flex items-center gap-x-2 sm:max-w-[80%] md:max-w-[60%] lg:max-w-[40%]"
+      >
+        <input
+          type="password"
+          name="password"
+          id="password"
+          class="border-1 border-neutral-800 rounded-2xl outline-none px-2 py-1 text-sm w-full"
+          autocomplete="new-password"
+          required
+        />
+        <!-- Ver la contraseña contraseña -->
+        <input
+          type="checkbox"
+          onclick="password.type = this.checked ? 'text' : 'password'"
+        />
+      </div>
       <!-- Enviar el formulario -->
       <button
         type="submit"
@@ -40,9 +49,15 @@ import Layout from "../layouts/Layout.astro";
         >Registrarse</button
       >
     </form>
-    <p class="text-sm mt-2 text-center">
+    <!-- Mensaje de confirmación -->
+    <p class="text-black text-sm font-semibold text-center mt-2">
+      *Revise su email para verificar su cuenta
+    </p>
+    <!-- Botón de inicio de sesión -->
+    <p class="text-md font-semibold mt-2 text-center">
       Ya tienes una cuenta? <a href="/signin" class="text-green-600"
-        >Iniciar sesión</a>
+        >Iniciar sesión</a
+      >
     </p>
   </main>
 </Layout>
