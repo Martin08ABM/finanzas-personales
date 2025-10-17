@@ -1,0 +1,56 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { supabase } from "../lib/supabase";
+
+const accessToken = Astro.cookies.get("sb-access-token");
+const refreshToken = Astro.cookies.get("sb-refresh-token");
+
+if (!accessToken || !refreshToken) {
+  return Astro.redirect("/signin");
+}
+
+let session;
+try {
+  session = await supabase.auth.setSession({
+    refresh_token: refreshToken.value,
+    access_token: accessToken.value,
+  });
+  if (session.error) {
+    Astro.cookies.delete("sb-access-token", {
+      path: "/",
+    });
+    Astro.cookies.delete("sb-refresh-token", {
+      path: "/",
+    });
+    return Astro.redirect("/signin");
+  }
+} catch (error) {
+  Astro.cookies.delete("sb-access-token", {
+    path: "/",
+  });
+  Astro.cookies.delete("sb-refresh-token", {
+    path: "/",
+  });
+  return Astro.redirect("/signin");
+}
+
+const email = session.data.user?.email;
+---
+
+<Layout title="Dinario - Dashboard">
+  <main class="px-4 py-2">
+    <h1 class="text-xl text-green-950 font-bold">
+      Bienvenido <em class="font-extrabold">{email}</em>
+    </h1>
+    <p class="text-neutral-800 font-semibold">Estamos felices de verte por aquí</p>
+    <h2 class="font-bold text-lg mt-2">¿Que quieres hacer?</h2>
+    <!-- TODO: Cuando la web este con las funciones mas avanzadas de añadir os datos actualizar esta parte para enviar a esas partes específicas -->
+    <form action="/api/auth/signout">
+      <button
+        type="submit"
+        class="border-none rounded-2xl bg-red-700 px-2 py-1 font-bold text-white"
+        >Cerrar sesión</button
+      >
+    </form>
+  </main>
+</Layout>

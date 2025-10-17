@@ -1,0 +1,34 @@
+import { e as createComponent, f as createAstro, k as renderComponent, r as renderTemplate, m as maybeRenderHead } from '../chunks/astro/server_CUtYkpRA.mjs';
+import 'kleur/colors';
+import { $ as $$Layout } from '../chunks/Layout_BEeywYFk.mjs';
+export { renderers } from '../renderers.mjs';
+
+const $$Astro = createAstro();
+const $$Signin = createComponent(($$result, $$props, $$slots) => {
+  const Astro2 = $$result.createAstro($$Astro, $$props, $$slots);
+  Astro2.self = $$Signin;
+  const { cookies, redirect } = Astro2;
+  const accessToken = cookies.get("sb-access-token");
+  const refreshToken = cookies.get("sb-refresh-token");
+  if (accessToken && refreshToken) {
+    return redirect("/dashboard");
+  }
+  return renderTemplate`${renderComponent($$result, "Layout", $$Layout, { "title": "Dinario - Iniciar sesi\xF3n" }, { "default": ($$result2) => renderTemplate` ${maybeRenderHead()}<main class="px-4 py-2"> <h1 class="text-black text-xl font-bold md:text-2xl lg:text-2xl">
+Iniciar sesión en Dinario:
+</h1> <!-- Formulario de inicio de sesión--> <form action="/api/auth/signin" method="post" class="flex flex-col border-2 border-neutral-900 rounded-xl p-2 shadow-2xl shadow-neutral-400 mt-4"> <!-- Correo electrónico --> <label for="email" class="font-semibold">Correo electrónico</label> <input type="email" name="email" id="email" class="border-1 border-neutral-800 rounded-2xl outline-none px-2 py-1 text-sm sm:max-w-[80%] md:max-w-[60%] lg:max-w-[40%]" autocomplete="email" required> <!-- Contraseña --> <label for="password" class="mt-4 font-semibold">Contraseña</label> <input type="password" name="password" id="password" class="border-1 border-neutral-800 rounded-2xl outline-none px-2 py-1 text-sm sm:max-w-[80%] md:max-w-[60%] lg:max-w-[40%]" autocomplete="current-password"> <!-- Enviar el formulario --> <button type="submit" class="bg-green-600 w-auto p-1 font-bold border-none rounded-2xl mt-4">Iniciar sesión</button> </form> <p class="text-md font-semibold mt-2 text-center"></p>
+¿Nuevo aquí? <a href="/register" class="text-green-600">Crea una cuenta</a>  </main> ` })}`;
+}, "C:/Users/marti/Desktop/finanzas-personales/src/pages/signin.astro", void 0);
+
+const $$file = "C:/Users/marti/Desktop/finanzas-personales/src/pages/signin.astro";
+const $$url = "/signin";
+
+const _page = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: $$Signin,
+  file: $$file,
+  url: $$url
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const page = () => _page;
+
+export { page };
