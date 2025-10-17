@@ -1,0 +1,25 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Eliminar Cuenta">
+  <main class="flex flex-col items-center justify-center h-screen">
+    <h1 class="text-3xl font-bold mb-8">Eliminar Cuenta</h1>
+    <p class="text-center mb-8">¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer.</p>
+    <form
+      action="/api/auth/delete-account"
+      method="post"
+      class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-md"
+    >
+      <div class="flex items-center justify-center">
+        <button
+          class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          type="submit"
+        >
+          Eliminar Mi Cuenta
+        </button>
+        <a href="/dashboard" class="ml-4 text-gray-600">Cancelar</a>
+      </div>
+    </form>
+  </main>
+</Layout>
