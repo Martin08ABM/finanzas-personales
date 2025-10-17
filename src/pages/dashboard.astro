@@ -1,56 +1,107 @@
 ---
+// Importación del Layout
 import Layout from "../layouts/Layout.astro";
+
+// Importacion de los componentes
+import BalanceSemanal from "../components/BalanceSemanal.jsx";
+import BalanceMensual from "../components/BalanceMensual.jsx";
+import BalanceAnual from "../components/BalanceAnual.jsx";
 import { supabase } from "../lib/supabase";
 
+// Get cookies from the request
 const accessToken = Astro.cookies.get("sb-access-token");
 const refreshToken = Astro.cookies.get("sb-refresh-token");
 
+// If cookies are not found, redirect to signin
 if (!accessToken || !refreshToken) {
   return Astro.redirect("/signin");
 }
 
-let session;
-try {
-  session = await supabase.auth.setSession({
-    refresh_token: refreshToken.value,
-    access_token: accessToken.value,
-  });
-  if (session.error) {
-    Astro.cookies.delete("sb-access-token", {
-      path: "/",
-    });
-    Astro.cookies.delete("sb-refresh-token", {
-      path: "/",
-    });
-    return Astro.redirect("/signin");
-  }
-} catch (error) {
-  Astro.cookies.delete("sb-access-token", {
-    path: "/",
-  });
-  Astro.cookies.delete("sb-refresh-token", {
-    path: "/",
-  });
+// Set the session from the cookies
+const { data, error } = await supabase.auth.setSession({
+  refresh_token: refreshToken.value,
+  access_token: accessToken.value,
+});
+
+// If there's error setting the session (e.g., expired tokens), delete cookies and redirect to signin
+if (error) {
+  Astro.cookies.delete("sb-access-token", { path: "/" });
+  Astro.cookies.delete("sb-refresh-token", { path: "/" });
   return Astro.redirect("/signin");
 }
 
-const email = session.data.user?.email;
+const user = data.user;
 ---
 
 <Layout title="Dinario - Dashboard">
-  <main class="px-4 py-2">
-    <h1 class="text-xl text-green-950 font-bold">
-      Bienvenido <em class="font-extrabold">{email}</em>
-    </h1>
-    <p class="text-neutral-800 font-semibold">Estamos felices de verte por aquí</p>
-    <h2 class="font-bold text-lg mt-2">¿Que quieres hacer?</h2>
-    <!-- TODO: Cuando la web este con las funciones mas avanzadas de añadir os datos actualizar esta parte para enviar a esas partes específicas -->
-    <form action="/api/auth/signout">
-      <button
-        type="submit"
-        class="border-none rounded-2xl bg-red-700 px-2 py-1 font-bold text-white"
-        >Cerrar sesión</button
+  <div id="sync-overlay" style="display:none; position:fixed; inset:0; background:rgba(255,255,255,0.9); z-index:50; align-items:center; justify-content:center;">
+    <div style="margin:auto; text-align:center;">
+      <p class="text-black text-lg font-semibold">Sincronizando, puede tardar un momento…</p>
+    </div>
+  </div>
+  <script type="module">
+    // On page load, fetch user's transactions and save to localStorage
+    (async function() {
+      try {
+        const overlay = document.getElementById('sync-overlay');
+        overlay.style.display = 'flex';
+
+        // Use the API route to get transactions for the logged user
+        const resp = await fetch('/api/transactions', { method: 'GET', credentials: 'include' });
+        if (!resp.ok) throw new Error('Failed to fetch transactions');
+        const txs = await resp.json();
+
+        // Normalize and write to localStorage key used by localSync
+        const mapped = txs.map(t => ({
+          _serverId: t.id,
+          type: t.type,
+          amount: Number(t.amount),
+          category: t.category,
+          description: t.description,
+          created_at: t.created_at
+        }));
+
+        localStorage.setItem('local_transactions_v1', JSON.stringify(mapped));
+      } catch (err) {
+        console.error('Sync failed', err);
+      } finally {
+        const overlay = document.getElementById('sync-overlay');
+        if (overlay) overlay.style.display = 'none';
+      }
+    })();
+  </script>
+  <article class="items-center align-middle flex flex-col w-[100%] mt-4">
+    <a href="/AddTransactionForm">
+      <section
+        class="flex flex-col max-w-90 items-center border-2 border-black rounded-2xl px-4 py-2 text-center"
       >
-    </form>
-  </main>
+        <h1 class="text-black text-2xl font-extrabold">Añadir Transacciones</h1>
+        <p>Añade transacciones para actualizar tu balance de gastos y ingresos</p>
+      </section>
+    </a>
+  </article>
+  <h2 class="text-black text-2xl font-bold mt-4 ml-8">Ver mis balances:</h2>
+  <section class="items-center px-4 py-2 ml-8 mt-2">
+    <!-- Balance semanal del dinerillo -->
+    <section class="mt-4" id="week-balance">
+      <p class="text-black text-lg font-semibold">Balance semanal:</p>
+      <span>
+        <BalanceSemanal client:load />
+      </span>
+    </section>
+    <!-- Balance mensual del dinerillo -->
+    <section id="month-balance">
+      <p class="text-black text-lg font-semibold">Balance mensual:</p>
+      <span>
+        <BalanceMensual client:load />
+      </span>
+    </section>
+    <!-- Balance anual del dinerillo -->
+    <section id="year-balance">
+      <p class="text-black text-lg font-semibold">Balance anual:</p>
+      <span>
+        <BalanceAnual client:visible />
+      </span>
+    </section>
+  </section>
 </Layout>
