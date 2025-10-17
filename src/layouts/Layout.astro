@@ -1,6 +1,7 @@
 ---
 import { supabase } from "../lib/supabase";
 import Header from "../components/Header.astro";
+import Footer from "../components/Footerr.astro";
 
 import "../styles/global.css";
 
@@ -31,6 +32,7 @@ if (accessToken && refreshToken) {
   <body>
     <Header user={user} />
     <slot />
+    <Footer />
   </body>
 </html>
 
