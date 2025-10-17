@@ -4,11 +4,7 @@ import Layout from "../layouts/Layout.astro"
 <Layout title="Dinario - Añadir transacción">
   <main class="flex flex-col px-4 py-2">
     <h1 class="text-xl text-black font-bold">Añadir transacción</h1>
-    <form
-      action="/api/transactions"
-      method="post"
-      class="flex flex-col px-2 py-2"
-    >
+    <form id="tx-form" class="flex flex-col px-2 py-2">
       <!-- Tipo de transacción (ingreso o gasto) -->
       <label for="type" class="font-semibold text-black text-lg"
         >Tipo de transacción:</label
@@ -96,10 +92,65 @@ import Layout from "../layouts/Layout.astro"
         required></textarea>
       <!-- Botón de guardar -->
       <button
-        type="submit"
+        id="save-btn"
+        type="button"
         class="mt-4 self-start rounded-xl bg-blue-600 px-4 py-2 font-bold text-white transition-colors hover:bg-blue-700"
         >Guardar</button
       >
     </form>
+
+    <script type="module">
+      import { saveLocalTransaction, sendTransactionToServer } from '../assets/localSync.js';
+
+      const form = document.getElementById('tx-form');
+      const btn = document.getElementById('save-btn');
+
+      function genLocalId() {
+        return 'local-' + Math.random().toString(36).slice(2, 9);
+      }
+
+      btn.addEventListener('click', async () => {
+        const fd = new FormData(form);
+        const type = fd.get('type');
+  let amount = parseFloat(fd.get('amount')) || 0;
+        const category = fd.get('category');
+        const description = fd.get('description');
+        const created_at = new Date().toISOString();
+
+        // Convert to negative for expenses
+        if (type === 'spent') amount = -Math.abs(amount);
+
+        const localTx = {
+          _localId: genLocalId(),
+          type,
+          amount,
+          category,
+          description,
+          created_at,
+        };
+
+        // Save locally for optimistic UI
+        saveLocalTransaction(localTx);
+
+        // Try to send to server in background
+        const serverForm = new FormData();
+        serverForm.append('type', type);
+  serverForm.append('amount', amount);
+        serverForm.append('category', category);
+        serverForm.append('description', description);
+
+        const result = await sendTransactionToServer(serverForm);
+        if (result.ok) {
+          // Ideally remove localTx after server confirmation; keeping it is OK
+          // You can enhance: map server id to local _localId and remove.
+          console.log('Transaction sent to server');
+          // Optionally navigate back
+          window.location.href = '/';
+        } else {
+          // Failed to send, keep local and notify user
+          alert('No se pudo enviar la transacción al servidor. Se guardó en local y se reintentará.');
+        }
+      });
+    </script>
   </main>
 </Layout>

@@ -4,7 +4,68 @@
   <a href="/">
     <img src="/dinario.png" alt="Logo de Dinario" class="h-7 sm:h-8" />
   </a>
-  <a href="/dashboard" class="text-white text-sm font-bold sm:text-base"
-    >Dashboard</a
-  >
+  <div class="flex items-center gap-4">
+    <a href="/dashboard" class="text-white text-sm font-bold sm:text-base"
+      >Dashboard</a
+    >
+    <div class="relative" id="profile-menu">
+      <button
+        id="profile-button"
+        class="rounded-full bg-gray-200 h-8 w-8 flex items-center justify-center"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6 text-gray-600"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+          ></path>
+        </svg>
+      </button>
+      <div
+        id="profile-dropdown"
+        class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden"
+      >
+        <a
+          href="/api/auth/signout"
+          class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+          >Cerrar sesión</a
+        >
+        <a
+          href="/change-password"
+          class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+          >Cambiar contraseña</a
+        >
+        <a
+          href="/delete-account"
+          class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+          >Eliminar cuenta</a
+        >
+      </div>
+    </div>
+  </div>
 </header>
+
+<script>
+  const profileButton = document.getElementById("profile-button");
+  const profileDropdown = document.getElementById("profile-dropdown");
+
+  profileButton.addEventListener("click", () => {
+    profileDropdown.classList.toggle("hidden");
+  });
+
+  window.addEventListener("click", (e) => {
+    if (
+      !profileButton.contains(e.target) &&
+      !profileDropdown.contains(e.target)
+    ) {
+      profileDropdown.classList.add("hidden");
+    }
+  });
+</script>
