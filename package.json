@@ -9,12 +9,8 @@
     "astro": "astro"
   },
   "dependencies": {
-<<<<<<< HEAD
     "@astrojs/vercel": "^8.2.10",
-=======
     "@astrojs/react": "^4.4.0",
-    "@astrojs/vercel": "^8.0.4",
->>>>>>> e81a1422ae97b33ffbbbd1361f012dd6e547be41
     "@supabase/supabase-js": "^2.75.0",
     "@tailwindcss/vite": "^4.1.14",
     "@types/react": "^19.2.2",
