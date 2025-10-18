@@ -5,6 +5,8 @@ import Footer from "../components/Footerr.astro";
 
 import "../styles/global.css";
 
+import Analytics from '@vercel/analytics/astro'
+
 const { title } = Astro.props;
 
 const accessToken = Astro.cookies.get("sb-access-token");
@@ -23,6 +25,7 @@ if (accessToken && refreshToken) {
 <!doctype html>
 <html lang="es-ES">
   <head>
+    <Analytics />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
