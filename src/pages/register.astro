@@ -3,7 +3,7 @@ import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout title="Dinario - Registro">
-  <main class="px-4 py-2">
+  <main class="px-4 py-2 items-center justify-center flex flex-col">
     <h1 class="text-black text-xl font-bold md:text-2xl lg:text-2xl">
       Registrate en Dinario:
     </h1>
@@ -11,43 +11,49 @@ import Layout from "../layouts/Layout.astro";
     <form
       action="/api/auth/register"
       method="post"
-      class="flex flex-col border-2 border-neutral-900 rounded-xl p-2 shadow-2xl shadow-neutral-400 mt-4"
+      class="flex flex-col border-2 border-neutral-900 rounded-xl p-2 shadow-2xl shadow-neutral-400 mt-4 sm:min-w-[90vh] md:min-w-[60vh] lg:min-w-[80vh] xlmin:w-[70vh]"
     >
-      <!-- Correo electrónico -->
-      <label for="email" class="font-semibold">Correo electrónico:</label>
-      <input
-        type="email"
-        name="email"
-        id="email"
-        class="border-1 border-neutral-800 rounded-2xl outline-none px-2 py-1 text-sm sm:max-w-[80%] md:max-w-[60%] lg:max-w-[40%]"
-        autocomplete="email"
-        required
-      />
-      <!-- Contraseña -->
-      <label for="password" class="mt-4 font-semibold">Contraseña:</label>
-      <div
-        class="flex items-center gap-x-2 sm:max-w-[80%] md:max-w-[60%] lg:max-w-[40%]"
-      >
+      <div class="flex flex-col items-center justify-center">
+        <!-- Correo electrónico -->
+        <label for="email" class="font-semibold">Correo electrónico:</label>
         <input
-          type="password"
-          name="password"
-          id="password"
-          class="border-1 border-neutral-800 rounded-2xl outline-none px-2 py-1 text-sm w-full"
-          autocomplete="new-password"
+          type="email"
+          name="email"
+          id="email"
+          class="border-1 border-neutral-800 rounded-2xl outline-none px-2 py-1 text-sm sm:min-w-[80vh] md:min-w-[60vh] lg:min-w-[60vh]"
+          autocomplete="email"
           required
         />
-        <!-- Ver la contraseña contraseña -->
-        <input
-          type="checkbox"
-          onclick="password.type = this.checked ? 'text' : 'password'"
-        />
       </div>
-      <!-- Enviar el formulario -->
-      <button
-        type="submit"
-        class="bg-green-600 w-auto p-1 font-bold border-none rounded-2xl mt-4"
-        >Registrarse</button
-      >
+      <div class="flex flex-col items-center justify-center">
+        <!-- Contraseña -->
+        <label for="password" class="mt-4 font-semibold">Contraseña:</label>
+        <div
+          class="flex items-center gap-x-2 sm:min-w-[80vh] md:min-w-[60vh] lg:min-w-[60vh]"
+        >
+          <input
+            type="password"
+            name="password"
+            id="password"
+            class="border-1 border-neutral-800 rounded-2xl outline-none px-2 py-1 text-sm w-full"
+            autocomplete="new-password"
+            required
+          />
+          <!-- Ver la contraseña contraseña -->
+          <input
+            type="checkbox"
+            onclick="password.type = this.checked ? 'text' : 'password'"
+          />
+        </div>
+      </div>
+      <div class="flex flex-col items-center justify-center">
+        <!-- Enviar el formulario -->
+        <button
+          type="submit"
+          class="bg-green-600 w-auto p-2 font-bold border-none rounded-2xl mt-4 sm:min-w-[80vh] md:min-w-[60vh] lg:min-w-[40vh]"
+          >Registrarse</button
+        >
+      </div>
     </form>
     <!-- Mensaje de confirmación -->
     <p class="text-black text-sm font-semibold text-center mt-2">
